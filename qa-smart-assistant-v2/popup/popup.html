@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QA Smart Assistant</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     SCREEN 1: IDLE / HOME
+══════════════════════════════════ -->
+<div id="screen-idle" class="screen active">
+  <header class="topbar tb-idle">
+    <div class="tb-brand">
+      <div class="tb-dot">
+        <svg viewBox="0 0 20 20" fill="none"><rect x="5" y="3" width="5" height="9" rx="2.5" fill="white"/><path d="M3 9a7 7 0 0014 0" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/><line x1="10" y1="16" x2="10" y2="18.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <span class="tb-title">QA Smart Assistant</span>
+    </div>
+    <div class="tb-right">
+      <span class="pill pill-ready">Ready</span>
+    </div>
+  </header>
+
+  <div class="screen-body">
+    <div class="field-group">
+      <label class="field-label">Tester Name</label>
+      <div class="input-wrap">
+        <input id="tester-name" class="field-input" type="text" placeholder="Enter your name" autocomplete="off" />
+        <svg class="input-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 17c0-3.314 3.134-6 7-6s7 2.686 7 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Session Title</label>
+      <div class="input-wrap">
+        <input id="session-title" class="field-input" type="text" placeholder="e.g. Checkout Flow Regression v2.4" autocomplete="off" />
+        <svg class="input-icon" viewBox="0 0 20 20" fill="none"><path d="M4 6h12M4 10h8M4 14h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+
+    <div class="start-area">
+      <button id="btn-start" class="start-btn">
+        <div class="start-ring"></div>
+        <div class="start-ring2"></div>
+        <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><circle cx="12" cy="12" r="9" stroke="white" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="white"/></svg>
+        <span class="start-lbl">START</span>
+      </button>
+      <p class="start-hint">Configure and start your recording session</p>
+    </div>
+
+    <div id="notes-preview" class="notes-chip" data-screen="notes">
+      <div class="notes-chip-icon">
+        <svg viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M7 7h6M7 10h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="notes-chip-text">
+        <span class="notes-chip-count" id="notes-count">Loading notes</span>
+        <span class="notes-chip-sub">Tap to view or add a note</span>
+      </div>
+      <svg class="notes-chip-arrow" viewBox="0 0 20 20" fill="none"><path d="M8 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+
+  <nav class="tab-bar">
+    <button class="tab-btn active" data-screen="idle">
+      <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><rect x="7.5" y="7.5" width="2" height="5" rx="1" fill="currentColor"/><rect x="10.5" y="7.5" width="2" height="5" rx="1" fill="currentColor"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="tab-btn" data-screen="record-setup">
+      <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="10" r="3.5" stroke="currentColor" stroke-width="1.5"/></svg>
+      <span>Record</span>
+    </button>
+    <button class="tab-btn" data-screen="results">
+      <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M7 10l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Results</span>
+    </button>
+  </nav>
+</div>
+
+
+<!-- ══════════════════════════════════
+     SCREEN 2: RECORD SETUP
+══════════════════════════════════ -->
+<div id="screen-record-setup" class="screen">
+  <header class="topbar tb-setup">
+    <div class="tb-brand">
+      <button class="back-btn" id="btn-back">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M13 5l-5 5 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <span class="tb-title">Record Setup</span>
+    </div>
+  </header>
+
+  <div class="screen-body">
+
+    <!-- Countdown timer -->
+    <div class="setup-section">
+      <span class="setup-label">Countdown Before Recording</span>
+      <div class="countdown-row">
+        <button class="cnt-btn" id="cnt-minus">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M5 10h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <div class="cnt-display">
+          <span class="cnt-value" id="cnt-value">3</span>
+          <span class="cnt-unit">sec</span>
+        </div>
+        <button class="cnt-btn" id="cnt-plus">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M10 5v10M5 10h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Options toggles -->
+    <div class="setup-section">
+      <span class="setup-label">Options</span>
+      <div class="options-list">
+
+        <div class="option-row" id="opt-mic">
+          <div class="option-left">
+            <div class="option-icon on">
+              <svg viewBox="0 0 20 20" fill="none"><rect x="7" y="2" width="6" height="10" rx="3" fill="currentColor"/><path d="M4 10a6 6 0 0012 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/><line x1="10" y1="16" x2="10" y2="18.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <div>
+              <span class="option-label">Microphone</span>
+              <span class="option-sub">Record voice narration</span>
+            </div>
+          </div>
+          <div class="toggle on" id="toggle-mic"><div class="toggle-thumb"></div></div>
+        </div>
+
+        <div class="option-row" id="opt-cam">
+          <div class="option-left">
+            <div class="option-icon" id="icon-cam">
+              <svg viewBox="0 0 20 20" fill="none"><path d="M3 6h9a2 2 0 012 2v4a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2z" stroke="currentColor" stroke-width="1.5"/><path d="M14 8.5l4-2v5l-4-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <span class="option-label">Webcam</span>
+              <span class="option-sub">Show face-cam overlay</span>
+            </div>
+          </div>
+          <div class="toggle" id="toggle-cam"><div class="toggle-thumb"></div></div>
+        </div>
+
+        <div class="option-row" id="opt-ctrlbar">
+          <div class="option-left">
+            <div class="option-icon on" id="icon-ctrlbar">
+              <svg viewBox="0 0 20 20" fill="none"><rect x="2" y="7" width="16" height="6" rx="3" stroke="currentColor" stroke-width="1.5"/><circle cx="6" cy="10" r="1.5" fill="currentColor"/><circle cx="10" cy="10" r="1.5" fill="currentColor"/></svg>
+            </div>
+            <div>
+              <span class="option-label">Control Bar</span>
+              <span class="option-sub">Floating toolbar on screen</span>
+            </div>
+          </div>
+          <div class="toggle on" id="toggle-ctrlbar"><div class="toggle-thumb"></div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Quality -->
+    <div class="setup-section">
+      <span class="setup-label">Quality</span>
+      <div class="quality-row">
+        <div class="q-tag selected" data-q="720">720p</div>
+        <div class="q-tag" data-q="1080">1080p</div>
+        <div class="q-tag" data-q="4k">4K</div>
+        <div class="q-tag selected" data-q="mp4">MP4</div>
+      </div>
+    </div>
+
+    <button id="btn-launch" class="launch-btn">
+      <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="white" stroke-width="1.5"/><circle cx="10" cy="10" r="3.5" fill="white"/></svg>
+      Start Recording
+    </button>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     SCREEN 3: NOTES
+══════════════════════════════════ -->
+<div id="screen-notes" class="screen">
+  <header class="topbar tb-setup">
+    <div class="tb-brand">
+      <button class="back-btn" data-screen="idle">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M13 5l-5 5 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <span class="tb-title">Notes</span>
+    </div>
+  </header>
+
+  <div class="screen-body">
+    <div class="notes-host" id="notes-host">this page</div>
+
+    <div class="note-compose">
+      <textarea id="note-input" class="note-textarea" placeholder="Write a note about a bug, an idea, or anything worth remembering for this page..." rows="3"></textarea>
+      <button id="btn-add-note" class="btn-primary btn-add-note">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+        Add Note
+      </button>
+    </div>
+
+    <div class="setup-label notes-list-label">Saved Notes</div>
+    <div class="notes-list" id="notes-list">
+      <p class="notes-empty">No notes yet for this page.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     SCREEN 4: RECORDING (popup view)
+══════════════════════════════════ -->
+<div id="screen-recording-active" class="screen">
+  <div class="recording-active-body">
+    <div class="rec-pulse">
+      <span class="rec-pulse-ring"></span>
+      <span class="rec-pulse-dot"></span>
+    </div>
+    <p class="rec-active-title">Recording in progress</p>
+    <p class="rec-active-sub">You can close this popup, recording continues in its own tab. Use the floating control bar to pause or stop.</p>
+    <button id="btn-stop-from-popup" class="btn-danger rec-active-stop">
+      <svg viewBox="0 0 20 20" fill="none"><rect x="5" y="5" width="10" height="10" rx="2" fill="white"/></svg>
+      Stop Recording
+    </button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     SCREEN 5: WAITING FOR PERMISSIONS
+══════════════════════════════════ -->
+<div id="screen-waiting-perms" class="screen">
+  <div class="recording-active-body">
+    <div class="spinner-ring"></div>
+    <p class="rec-active-title">Waiting for permissions</p>
+    <p class="rec-active-sub">Grant access in the new tab, then click <strong>Continue to Recording</strong>.</p>
+    <button id="cancel-perms" class="btn-ghost rec-active-stop">Cancel</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     SCREEN 6: RESULTS
+══════════════════════════════════ -->
+<div id="screen-results" class="screen">
+  <header class="topbar tb-results">
+    <div class="tb-brand">
+      <div class="tb-dot tb-dot-success">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M5 10l4 4 6-7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="tb-title">Last Session</span>
+    </div>
+  </header>
+
+  <div class="screen-body results-body">
+
+    <div id="results-empty" class="results-empty">
+      <svg viewBox="0 0 48 48" fill="none" class="results-empty-icon">
+        <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2"/>
+        <path d="M16 24l6 6 10-10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <p class="results-empty-title">No session recorded yet</p>
+      <p class="results-empty-sub">After a recording finishes, a summary will appear here.</p>
+      <button data-screen="record-setup" class="tab-btn-link">
+        Start a new recording
+        <svg viewBox="0 0 20 20" fill="none"><path d="M7 4l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <div id="results-data" class="results-data" style="display:none;">
+      <button data-screen="record-setup" class="launch-btn">
+        <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="white" stroke-width="1.5"/><circle cx="10" cy="10" r="3.5" fill="white"/></svg>
+        Start New Recording
+      </button>
+      <div id="results-list" class="results-list"></div>
+    </div>
+
+  </div>
+  <nav class="tab-bar">
+    <button class="tab-btn" data-screen="idle"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><rect x="7.5" y="7.5" width="2" height="5" rx="1" fill="currentColor"/><rect x="10.5" y="7.5" width="2" height="5" rx="1" fill="currentColor"/></svg><span>Home</span></button>
+    <button class="tab-btn" data-screen="record-setup"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="10" r="3.5" stroke="currentColor" stroke-width="1.5"/></svg><span>Record</span></button>
+    <button class="tab-btn active" data-screen="results"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M7 10l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Results</span></button>
+  </nav>
+</div>
+
+<script src="../shared/db.js"></script>
+<script src="popup.js"></script>
+</body>
+</html>
